@@ -7,6 +7,7 @@ chmod +x infra/ -R && cd infra/
 . ./install_ruby.sh && ./install_mongodb.sh && ./deploy.sh
 ```
 
+
 #### startup script for GCP
 
 ```
