@@ -1,18 +1,32 @@
-### Infrastructure repo
+## Different concepts of infrastructure management
+
+## Directory stucture 
+
+* packer/ templates and scripts to build preconfigured images with `Packer` from HashiCorp  
+* terraform / Infrastructure as a Code practice with `Terraform`.
+.sh scripts for manual deployment with hands via ssh session
+
+### Quick start
+
+- Manual app deploymen
+- Build image with Packer
+- Terrform scenario 
+- Ansible scenario
 
 
 #### Manual installation using bash scripts
 
-`install_ruby.sh` will install Ruby 2.4
-`install_mongodb` will install MongoDB
-`deploy.sh` will deploy our app `puma-server`
-
+Steps:
+- Create computing instance on GCP (or any other provider or you can use bare metal server)
+- SSH to created instance and use command below
 ssh to host that will runs app and run this commands:
 ```
 git clone https://github.com/gis23/infra.git
 chmod +x infra/ -R && cd infra/
 . ./install_ruby.sh && ./install_mongodb.sh && ./deploy.sh
 ```
+
+Application will be avalable at http://yourinstanceip:9292/
 
 
 #### startup script for GCP
@@ -22,25 +36,42 @@ for example:
 gcloud compute instances create --boot-disk-size=10GB --image=ubuntu-1604-xenial-v20170815a --image-project=ubuntu-os-cloud --machine-type=g1-small --tags puma-server --restart-on-failure --zone=europe-west1-b --metadata startup-script='wget -O - https://raw.githubusercontent.com/gis23/infra/config-scripts/startup.sh | bash' reddit-app
 ```
 
-#### Packer template for GCP
+### Build image with Packer
+#### Packer templates for GCP
 
-build example:
+To see template variables use command 
+
 ```
-packer build \
--var 'project_id=versatile-cove-178812' \
--var 'source_image=ubuntu-1604-xenial-v20170815a' \
--var 'machine_type=f1-micro' \
-ubuntu16.json
+$ packer inspect <template file>
 ```
 
-variables you can use:
+Lets buil app image using `packer\app.json` template and `packer\vars.json` as varfile
+You can use `packer\vars.json.example` as example for your `vars.json` file
+
 ```
-  "project_id": null,
-  "source_image": null,
-  "machine_type": "f1-micro",
-  "disk_size": 10,
-  "disk_type": "pd-standard",
-  "network": "default",
-  "tags":""
+$ packer build -var-file vars.json app.json
 ```
-`project_id` and `source_image` are required variables
+
+### Terraform provisioning
+Terraform deploys the infrastructure by setting up network, spinning up servers with an images build by Packer.
+before you begin work with terraform you have to build app and db images using `Packer`
+After that go to terraform folder and config `variables.tf` file.
+According you situation you might want to customize:
+
+* project: Your GCP project id
+* region: GCP region
+* app_disk_image: app image name (build by packer)
+* db_disk_image: db image name (build by packer)
+* public_key_path: path to ssh public key (this key will be allowed to ssh into the servers)  
+
+```
+$ cd terraform
+```
+run command below to load modules
+```
+$ terraform get
+``` 
+then run 
+```
+terraform apply
+```
