@@ -45,11 +45,11 @@ To see template variables use command
 $ packer inspect <template file>
 ```
 
-Lets buil app image using `packer\app.json` template and `packer\vars.json` as varfile
+Lets buil app image using `packer\ubuntu16.json` template and `packer\vars.json` as varfile
 You can use `packer\vars.json.example` as example for your `vars.json` file
 
 ```
-$ packer build -var-file vars.json app.json
+$ packer build -var-file vars.json ubuntu16.json
 ```
 
 ### Terraform provisioning
@@ -75,3 +75,6 @@ then run
 ```
 terraform apply
 ```
+
+### Ansible
+Directory `ansible` contains playbooks to deploy app and db instance via ansible provisioners
