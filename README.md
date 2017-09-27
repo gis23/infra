@@ -77,4 +77,12 @@ terraform apply
 ```
 
 ### Ansible
-Directory `ansible` contains playbooks to deploy app and db instance via ansible provisioners
+Directory `ansible` contains playbooks to deploy app and db instance via ansible.
+`packer\app.json` and `packer\db.json` uses ansible playbooks located in `ansible\` folder to build images.
+
+```
+$ packer build -var-file vars.json app.json
+```
+```
+$ packer build -var-file vars.json db.json
+```
