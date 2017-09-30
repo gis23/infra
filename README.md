@@ -86,3 +86,30 @@ $ packer build -var-file vars.json app.json
 ```
 $ packer build -var-file vars.json db.json
 ```
+
+edit `ansible/hosts` file with your ip addresses 
+
+```
+[app]
+appserver ansible_ssh_host=0.0.0.0 
+
+[db]
+dbserver ansible_ssh_host=0.0.0.0
+```
+
+configure db server
+```
+ansible-playbook reddit_app.yml --limit db --tags db-tag
+```
+
+configure app server
+```
+ansible-playbook reddit_app.yml --check --limit app --tags app-tag
+```
+
+deploy application
+```
+ansible-playbook reddit_app.yml --check --limit app --tags deploy-tag
+```
+
+you may check app at 'http://appserverip:9292'
