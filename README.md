@@ -1,6 +1,6 @@
 ## Different concepts of infrastructure management
 
-## Directory stucture 
+## Directory structure 
 
 * packer/ templates and scripts to build preconfigured images with `Packer` from HashiCorp  
 * terraform / Infrastructure as a Code practice with `Terraform`.
