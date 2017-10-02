@@ -1,8 +1,8 @@
 ## Different concepts of infrastructure management
 
-## Directory structure 
+## Directory structure
 
-* packer/ templates and scripts to build preconfigured images with `Packer` from HashiCorp  
+* packer/ templates and scripts to build preconfigured images with `Packer` from HashiCorp
 * terraform / Infrastructure as a Code practice with `Terraform`.
 .sh scripts for manual deployment with hands via ssh session
 
@@ -10,7 +10,7 @@
 
 - Manual app deploymen
 - Build image with Packer
-- Terrform scenario 
+- Terrform scenario
 - Ansible scenario
 
 
@@ -39,7 +39,7 @@ gcloud compute instances create --boot-disk-size=10GB --image=ubuntu-1604-xenial
 ### Build image with Packer
 #### Packer templates for GCP
 
-To see template variables use command 
+To see template variables use command
 
 ```
 $ packer inspect <template file>
@@ -62,7 +62,7 @@ According you situation you might want to customize:
 * region: GCP region
 * app_disk_image: app image name (build by packer)
 * db_disk_image: db image name (build by packer)
-* public_key_path: path to ssh public key (this key will be allowed to ssh into the servers)  
+* public_key_path: path to ssh public key (this key will be allowed to ssh into the servers)
 
 ```
 $ cd terraform
@@ -70,8 +70,8 @@ $ cd terraform
 run command below to load modules
 ```
 $ terraform get
-``` 
-then run 
+```
+then run
 ```
 terraform apply
 ```
@@ -87,11 +87,11 @@ $ packer build -var-file vars.json app.json
 $ packer build -var-file vars.json db.json
 ```
 
-edit `ansible/hosts` file with your ip addresses 
+edit `ansible/hosts` file with your ip addresses
 
 ```
 [app]
-appserver ansible_ssh_host=0.0.0.0 
+appserver ansible_ssh_host=0.0.0.0
 
 [db]
 dbserver ansible_ssh_host=0.0.0.0
