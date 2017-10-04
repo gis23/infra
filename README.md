@@ -1,8 +1,8 @@
 ## Different concepts of infrastructure management
 
-## Directory structure 
+## Directory structure
 
-* packer/ templates and scripts to build preconfigured images with `Packer` from HashiCorp  
+* packer/ templates and scripts to build preconfigured images with `Packer` from HashiCorp
 * terraform / Infrastructure as a Code practice with `Terraform`.
 .sh scripts for manual deployment with hands via ssh session
 
@@ -10,7 +10,7 @@
 
 - Manual app deploymen
 - Build image with Packer
-- Terrform scenario 
+- Terrform scenario
 - Ansible scenario
 
 
@@ -39,7 +39,7 @@ gcloud compute instances create --boot-disk-size=10GB --image=ubuntu-1604-xenial
 ### Build image with Packer
 #### Packer templates for GCP
 
-To see template variables use command 
+To see template variables use command
 
 ```
 $ packer inspect <template file>
@@ -62,7 +62,7 @@ According you situation you might want to customize:
 * region: GCP region
 * app_disk_image: app image name (build by packer)
 * db_disk_image: db image name (build by packer)
-* public_key_path: path to ssh public key (this key will be allowed to ssh into the servers)  
+* public_key_path: path to ssh public key (this key will be allowed to ssh into the servers)
 
 ```
 $ cd terraform
@@ -70,8 +70,8 @@ $ cd terraform
 run command below to load modules
 ```
 $ terraform get
-``` 
-then run 
+```
+then run
 ```
 terraform apply
 ```
@@ -87,29 +87,87 @@ $ packer build -var-file vars.json app.json
 $ packer build -var-file vars.json db.json
 ```
 
-edit `ansible/hosts` file with your ip addresses 
+There is 2 envirometns:
+* stage: `ansible/enviroments/stage`
+* prod: `ansible/enviroments/prod`
+
+Inventory for each of this enviroments located in `hosts` file in their folder.
+By default ansible uses `stage` inventory.
+You may specifi `prod` enviroment inventory by using `-i` key
+
+```
+ansible-playbook -i environments/prod/hosts deploy.yml
+```
+or you may change it in `ansible/ansible.cfg`
+
+Edit `hosts` file with your ip addresses
 
 ```
 [app]
-appserver ansible_ssh_host=0.0.0.0 
+appserver ansible_ssh_host=0.0.0.0
 
 [db]
 dbserver ansible_ssh_host=0.0.0.0
 ```
 
+####One play playbook example
+
 configure db server
 ```
-ansible-playbook reddit_app.yml --limit db --tags db-tag
+ansible-playbook reddit_app_one_play.yml --limit db --tags db-tag --check
+ansible-playbook reddit_app_one_play.yml --limit db --tags db-tag
 ```
 
 configure app server
 ```
-ansible-playbook reddit_app.yml --check --limit app --tags app-tag
+ansible-playbook reddit_app_one_play.yml --limit app --tags app-tag --check
+ansible-playbook reddit_app_one_play.yml --limit app --tags app-tag
 ```
 
 deploy application
 ```
-ansible-playbook reddit_app.yml --check --limit app --tags deploy-tag
+ansible-playbook reddit_app_one_play.yml --limit app --tags deploy-tag --check
+ansible-playbook reddit_app_one_play.yml --limit app --tags deploy-tag
+```
+
+you may check app at 'http://appserverip:9292'
+
+####Multiple plays in playbook example
+
+configure db server
+```
+ansible-playbook reddit_app_multiple_plays.yml --tags db-tag --check
+ansible-playbook reddit_app_multiple_plays.yml --tags db-tag
+```
+
+configure app server
+```
+ansible-playbook reddit_app_multiple_plays.yml --tags app-tag --check
+ansible-playbook reddit_app_multiple_plays.yml --tags app-tag
+```
+
+deploy application
+```
+ansible-playbook reddit_app_multiple_plays.yml --tags deploy-tag --check
+ansible-playbook reddit_app_multiple_plays.yml --tags deploy-tag
+```
+
+you may check app at 'http://appserverip:9292'
+
+####Multiple playbooks example
+
+`ansible/site.yml`
+
+```
+---
+- import_playbook: db.yml
+- import_playbook: app.yml
+- import_playbook: deploy.yml
+```
+
+```
+ansible-playbook site.yml --check
+ansible-playbook site.yml
 ```
 
 you may check app at 'http://appserverip:9292'
