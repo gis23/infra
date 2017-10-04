@@ -4,3 +4,6 @@
 *.tfvars
 .terraform/
 *.retry
+# Vagrant
+.vagrant/
+*.logs
