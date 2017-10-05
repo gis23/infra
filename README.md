@@ -171,3 +171,19 @@ ansible-playbook site.yml
 ```
 
 you may check app at 'http://appserverip:9292'
+
+### Vagrant
+install [virtualbox] (https://www.virtualbox.org/wiki/Downloads)
+install [vagrant] (https://www.vagrantup.com/downloads.html)
+cd to `/ansible` run `vagrant up`
+
+#### Molecule and Testinfra
+cd to `/ansible` run `pip install -r requirements.txt`
+cd to role folder and run
+```
+molecule init scenario --scenario-name default -r db -d vagrant
+```
+run test
+```
+molecule test
+```
