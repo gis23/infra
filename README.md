@@ -132,7 +132,7 @@ ansible-playbook reddit_app_one_play.yml --limit app --tags deploy-tag
 
 you may check app at 'http://appserverip:9292'
 
-####Multiple plays in playbook example
+#### Multiple plays in playbook example
 
 configure db server
 ```
@@ -154,7 +154,7 @@ ansible-playbook reddit_app_multiple_plays.yml --tags deploy-tag
 
 you may check app at 'http://appserverip:9292'
 
-####Multiple playbooks example
+#### Multiple playbooks example
 
 `ansible/site.yml`
 
