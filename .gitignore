@@ -7,4 +7,5 @@
 # Vagrant
 .vagrant/
 *.logs
+*.log
 vars.json
